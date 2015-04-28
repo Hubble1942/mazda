@@ -59,7 +59,5 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# mint-fortune
-/usr/bin/mint-fortune
-
 export PS1='\[\e[1;34m\]# \[\e[0;32m\]\u \[\e[0;37m\]at \[\e[0;36m\]\h \[\e[0;33m\]\w\n\[\e[0;31m\]$\[\e[0;37m\] '
+
