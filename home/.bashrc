@@ -62,5 +62,5 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 # if we have a resize command, we call it
-hash foo 2>/dev/null && resize > /dev/null
+hash resize 2>/dev/null && resize > /dev/null
 
