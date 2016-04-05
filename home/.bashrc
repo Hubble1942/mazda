@@ -35,6 +35,7 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+PS1='\[\e[1;34m\]# \[\e[0;32m\]\u\[\e[0;37m\] at \[\e[0;36m\]\h \[\e[0;33m\]\w\n\[\e[0;31m\]$\[\e[0;37m\] '
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -59,6 +60,5 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-export PS1='\[\e[1;34m\]# \[\e[0;32m\]\u \[\e[0;37m\]at \[\e[0;36m\]\h \[\e[0;33m\]\w\n\[\e[0;31m\]$\[\e[0;37m\] '
 
 resize > /dev/null
