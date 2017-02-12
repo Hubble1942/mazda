@@ -64,3 +64,8 @@ fi
 # if we have a resize command, we call it
 hash resize 2>/dev/null && resize > /dev/null
 
+# some custom exports
+if [ -f ~/.bash_exports ]; then
+    . ~/.bash_exports
+fi
+
