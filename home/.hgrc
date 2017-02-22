@@ -1,0 +1,12 @@
+[ui]
+username = Christian Ewald <christian@ewald.li>
+ssh = ssh -C
+merge = bcompare
+
+[extensions]
+progress=
+hgext.purge=
+guestrepo=
+
+[tortoisehg]
+vdiff = bcompare
