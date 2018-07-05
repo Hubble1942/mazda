@@ -6,8 +6,6 @@ function ensure {
 
 # install some packages if they're not already there
 ensure hg mercurial
-ensure thg tortoisehg python-iniparse tortoisehg-nautilus
-ensure subl sublime-text
 
 # get this scripts location
 ROOT_DIR=$( cd "$( dirname "$0" )" && pwd )
