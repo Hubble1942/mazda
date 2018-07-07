@@ -6,7 +6,6 @@ merge = bcompare
 [extensions]
 progress=
 hgext.purge=
-guestrepo=
 strip=
 
 [tortoisehg]
