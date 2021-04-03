@@ -120,3 +120,8 @@ fi
 if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent -s`
 fi
+
+# local exports
+if [ -f ~/.bash_local_exports ]; then
+    . ~/.bash_local_exports
+fi
