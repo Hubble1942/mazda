@@ -87,6 +87,7 @@ source $ZSH/oh-my-zsh.sh
 # else
 #   export EDITOR='nano'
 # fi
+export EDITOR='nano'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -101,3 +102,8 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="nano ~/.oh-my-zsh"
 alias dir="ls -ahl --group-directories-first"
 alias cd..="cd .."
+
+# local exports
+if [ -f ~/.bash_local_exports ]; then
+    . ~/.bash_local_exports
+fi
