@@ -125,3 +125,5 @@ fi
 if [ -f ~/.bash_local_exports ]; then
     . ~/.bash_local_exports
 fi
+
+source ~/.git-plugin-bash.sh
