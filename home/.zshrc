@@ -69,6 +69,9 @@ ZSH_THEME="tjkirch"
 # - load the identities lazy
 zstyle :omz:plugins:ssh-agent lazy yes
 
+# - enable support for agent-forwarding
+zstyle :omz:plugins:ssh-agent agent-forwarding yes
+
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
