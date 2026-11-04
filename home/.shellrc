@@ -1,0 +1,16 @@
+# shellcheck shell=sh
+# ~/.shellrc: interactive settings shared by bash and zsh.
+# Sourced from ~/.bashrc and ~/.zshrc -- keep it POSIX sh compatible.
+
+# Environment
+export EDITOR='nano'
+export LESS=-FRX
+
+# Aliases
+alias dir='ls -ahl --group-directories-first'
+alias cd..='cd ..'
+
+# Machine-specific settings that should not be committed
+if [ -f ~/.local_env ]; then
+  . ~/.local_env
+fi

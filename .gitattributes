@@ -1,2 +1,3 @@
-# Disable all line-ending normalization as its already defined in editorconfig
+# Store and check out all files byte-for-byte (no CRLF conversion).
+# Editors get the line-ending style from .editorconfig.
 * -text

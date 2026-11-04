@@ -16,8 +16,12 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=50000
+HISTFILESIZE=100000
+
+# write each command to the history file immediately, so it survives crashes
+# and is shared with shells opened later
+PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -80,8 +84,6 @@ if [ -x /usr/bin/dircolors ]; then
     #alias vdir='vdir --color=auto'
 
     alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
 fi
 
 # colored GCC warnings and errors
@@ -96,15 +98,6 @@ alias l='ls -CF'
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
-
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
@@ -116,17 +109,25 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# start the ssh agent
-if [ -z "$SSH_AUTH_SOCK" ] ; then
-  eval `ssh-agent -s`
+# Use a single ssh-agent per user instead of one per shell. Prefer the systemd
+# user agent (ssh-agent.socket); otherwise start one on a fixed socket that all
+# shells share. A forwarded agent (SSH_AUTH_SOCK already set) is left alone.
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  if [ -S "${XDG_RUNTIME_DIR:-/nonexistent}/openssh_agent" ]; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/openssh_agent"
+  else
+    export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+    ssh-add -l >/dev/null 2>&1
+    if [ $? -eq 2 ]; then # 2 = no agent listening
+      mkdir -p -m 700 "$HOME/.ssh"
+      rm -f "$SSH_AUTH_SOCK"
+      ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
+    fi
+  fi
 fi
 
-# sane less settings
-export LESS=-FRX
+# Settings shared with zsh
+[ -f ~/.shellrc ] && . ~/.shellrc
 
-# local exports
-if [ -f ~/.bash_local_exports ]; then
-    . ~/.bash_local_exports
-fi
-
-source ~/.git-plugin-bash.sh
+# Oh My Zsh git aliases
+[ -f ~/.git-plugin-bash.sh ] && . ~/.git-plugin-bash.sh
