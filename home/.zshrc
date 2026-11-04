@@ -114,6 +114,9 @@ export EDITOR='nano'
 alias dir="ls -ahl --group-directories-first"
 alias cd..="cd .."
 
+# sane less settings
+export LESS=-FRX
+
 # local exports
 if [ -f ~/.bash_local_exports ]; then
     . ~/.bash_local_exports

@@ -121,6 +121,9 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
   eval `ssh-agent -s`
 fi
 
+# sane less settings
+export LESS=-FRX
+
 # local exports
 if [ -f ~/.bash_local_exports ]; then
     . ~/.bash_local_exports
