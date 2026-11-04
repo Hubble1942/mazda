@@ -44,6 +44,20 @@ Both shells share one ssh-agent:
 `setup.sh` adds `AddKeysToAgent yes` to `~/.ssh/config` unless the option is
 already set there, so keys are loaded on first use.
 
+On WSL, the Windows ssh config and `known_hosts` are used as well:
+
+- `setup.sh` links the Windows `.ssh` folder to `~/.ssh/windows` and adds
+  `Include config.d/windows.conf` to the end of `~/.ssh/config`, so entries in
+  the WSL config win.
+- `.shellrc` regenerates `~/.ssh/config.d/windows.conf` from
+  `~/.ssh/windows/config` whenever the Windows file changes. It strips CRLF and
+  points `IdentityFile` at `~/.ssh/windows/`, and adds the Windows
+  `known_hosts` as a second `UserKnownHostsFile`. New host keys are written to
+  the WSL `known_hosts` only.
+- The private keys on `C:` are world-readable from WSL, so ssh refuses to load
+  them from there. Keys referenced in the Windows config have to be in the
+  Windows agent: `ssh-add $HOME\.ssh\<key>` in PowerShell.
+
 Machine-specific settings that should not be committed go in `~/.local_env`.
 `.shellrc` sources it if it exists.
 

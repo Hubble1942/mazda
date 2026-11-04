@@ -33,6 +33,34 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
   fi
 fi
 
+# WSL: keep ~/.ssh/config.d/windows.conf, a copy of the Windows ssh config
+# converted for Linux ssh, up to date. ~/.ssh/windows links to the Windows .ssh
+# folder and ~/.ssh/config includes the copy; both are set up by setup.sh.
+# The Windows file can't be included directly: on /mnt/c it is world-writable,
+# which ssh refuses. Key paths are pointed at the Windows .ssh folder so ssh
+# finds the .pub files matching the keys in the Windows agent.
+if [ -d ~/.ssh/windows ]; then
+  _win=~/.ssh/windows/config
+  _gen=~/.ssh/config.d/windows.conf
+  if [ ! -f "$_gen" ] || { [ -f "$_win" ] && [ "$_win" -nt "$_gen" ]; }; then
+    mkdir -p ~/.ssh/config.d
+    (
+      umask 077
+      {
+        echo "# GENERATED from ~/.ssh/windows/config by ~/.shellrc -- do not edit"
+        echo "UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/windows/known_hosts"
+        if [ -f "$_win" ]; then
+          tr -d '\r' < "$_win" | sed -e '/^[[:space:]]*\(IdentityFile\|CertificateFile\)/I{
+            s#\\#/#g
+            s#\(~\|%d\)/\.ssh/#~/.ssh/windows/#
+          }' -e '$a\'
+        fi
+      } > "$_gen.tmp" && mv "$_gen.tmp" "$_gen"
+    )
+  fi
+  unset _win _gen
+fi
+
 # Machine-specific settings that should not be committed
 if [ -f ~/.local_env ]; then
   . ~/.local_env
