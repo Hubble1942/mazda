@@ -32,10 +32,17 @@ files or installing Oh My Zsh.
 | `home/.oh-my-zsh/custom/themes/mazda.zsh-theme` | zsh prompt |
 | `home/.git-plugin-bash.sh` | Oh My Zsh git aliases for bash (generated) |
 
-Both shells share one ssh-agent: the systemd user agent (`ssh-agent.socket`)
-if it is running, otherwise one on `~/.ssh/agent.sock`. `setup.sh` adds
-`AddKeysToAgent yes` to `~/.ssh/config` unless the option is already set there,
-so keys are loaded on first use.
+Both shells share one ssh-agent:
+
+1. a forwarded agent, if `SSH_AUTH_SOCK` is already set
+2. on WSL, the Windows ssh-agent through
+   [wsl2-ssh-agent](https://github.com/mame/wsl2-ssh-agent). `setup.sh`
+   downloads a pinned, hash-checked release to `~/.local/bin`
+3. the systemd user agent (`ssh-agent.socket`)
+4. an agent on `~/.ssh/agent.sock`
+
+`setup.sh` adds `AddKeysToAgent yes` to `~/.ssh/config` unless the option is
+already set there, so keys are loaded on first use.
 
 Machine-specific settings that should not be committed go in `~/.local_env`.
 `.shellrc` sources it if it exists.
