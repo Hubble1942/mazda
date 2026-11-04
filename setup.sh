@@ -40,3 +40,18 @@ find . -type f "${skip_omz[@]}" -print0 | while IFS= read -r -d '' rel; do
   ln -s "$src" "$dest"
   echo "linked ~/$rel"
 done
+
+# Have ssh add keys to the agent on first use. ~/.ssh/config is not managed by
+# this repo, so only add the option if it isn't configured anywhere yet. It goes
+# at the top of the file: appended at the end it would only apply to the last
+# Host block.
+SSH_CONFIG="$HOME/.ssh/config"
+if ! grep -qiE '^[[:space:]]*AddKeysToAgent([[:space:]]|=)' "$SSH_CONFIG" 2>/dev/null; then
+  mkdir -p -m 700 "$HOME/.ssh"
+  touch "$SSH_CONFIG"
+  chmod 600 "$SSH_CONFIG"
+  { printf '%s\n\n' 'AddKeysToAgent yes'; cat "$SSH_CONFIG"; } > "$SSH_CONFIG.tmp"
+  chmod 600 "$SSH_CONFIG.tmp"
+  mv "$SSH_CONFIG.tmp" "$SSH_CONFIG"
+  echo "added AddKeysToAgent yes to ~/.ssh/config"
+fi

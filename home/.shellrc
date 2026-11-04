@@ -10,6 +10,24 @@ export LESS=-FRX
 alias dir='ls -ahl --group-directories-first'
 alias cd..='cd ..'
 
+# ssh-agent: use a single agent per user instead of one per shell. Prefer the
+# systemd user agent (ssh-agent.socket); otherwise start one on a fixed socket
+# that all shells share. A forwarded agent (SSH_AUTH_SOCK already set) is left
+# alone. Keys are added on first use via AddKeysToAgent in ~/.ssh/config.
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  if [ -S "${XDG_RUNTIME_DIR:-/nonexistent}/openssh_agent" ]; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/openssh_agent"
+  else
+    export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+    ssh-add -l >/dev/null 2>&1
+    if [ $? -eq 2 ]; then # 2 = no agent listening
+      mkdir -p -m 700 "$HOME/.ssh"
+      rm -f "$SSH_AUTH_SOCK"
+      ssh-agent -a "$SSH_AUTH_SOCK" >/dev/null
+    fi
+  fi
+fi
+
 # Machine-specific settings that should not be committed
 if [ -f ~/.local_env ]; then
   . ~/.local_env
