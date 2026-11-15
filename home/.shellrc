@@ -6,6 +6,9 @@
 export EDITOR='nano'
 export LESS=-FRX
 
+# Azure DevOps CLI: personal access token, kept out of the repo
+[ -r ~/.config/azure-devops/pat ] && export AZURE_DEVOPS_EXT_PAT="$(cat ~/.config/azure-devops/pat)"
+
 # Aliases
 alias dir='ls -ahl --group-directories-first'
 alias cd..='cd ..'
